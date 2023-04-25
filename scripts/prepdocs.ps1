@@ -1,3 +1,14 @@
+if($args.Length -lt 4){
+  Write-Host "The required parameters should be provided."
+  Write-Host "prepdocs.ps1 <storage account> <search service> <form recognizer service> <tenant id>"
+  exit
+}
+
+$AZURE_STORAGE_ACCOUNT = $args[0]
+$AZURE_SEARCH_SERVICE = $args[1]
+$AZURE_FORMRECOGNIZER_SERVICE = $args[2]
+$AZURE_TENANT_ID = $args[3]
+
 $pythonCmd = Get-Command python -ErrorAction SilentlyContinue
 if (-not $pythonCmd) {
   # fallback to python3 if python not found
@@ -18,4 +29,4 @@ Start-Process -FilePath $venvPythonPath -ArgumentList "-m pip install -r ./scrip
 
 Write-Host 'Running "prepdocs.py"'
 $cwd = (Get-Location)
-Start-Process -FilePath $venvPythonPath -ArgumentList "./scripts/prepdocs.py $cwd/data/* --storageaccount $env:AZURE_STORAGE_ACCOUNT --container $env:AZURE_STORAGE_CONTAINER --searchservice $env:AZURE_SEARCH_SERVICE --index $env:AZURE_SEARCH_INDEX --formrecognizerservice $env:AZURE_FORMRECOGNIZER_SERVICE --tenantid $env:AZURE_TENANT_ID -v" -Wait -NoNewWindow
+Start-Process -FilePath $venvPythonPath -ArgumentList "./scripts/prepdocs.py $cwd/data/* --storageaccount $AZURE_STORAGE_ACCOUNT --container content --searchservice $AZURE_SEARCH_SERVICE --index gptkbindex --formrecognizerservice $AZURE_FORMRECOGNIZER_SERVICE --tenantid $AZURE_TENANT_ID -v" -Wait -NoNewWindow
