@@ -1,6 +1,6 @@
-if($args.Length -lt 9){
+if($args.Length -lt 8){
     Write-Host "The required parameters should be provided."
-    Write-Host "deploy.ps1 <environment name> <project name> <tenant id> <dev center name> <environment type> <catalog name> <catalog item name> <location> <principal id>"
+    Write-Host "deploy.ps1 <environment name> <project name> <tenant id> <dev center name> <environment type> <catalog name> <catalog item name> <principal id>"
     exit
 }
 
@@ -25,17 +25,18 @@ $devcenterName = $args[3]
 $environmentType = $args[4]
 $catalogName = $args[5]
 $catalogItemName = $args[6]
-$location = $args[7]
-$principalId = $args[8]
+$principalId = $args[7]
 
 Write-Host "Provisioning Azure resources..."
-az devcenter dev environment create --dev-center-name $devcenterName `
+$result = az devcenter dev environment create --dev-center-name $devcenterName `
                                     --project-name $projectName `
                                     --environment-name $environmentName `
                                     --environment-type $environmentType `
                                     --catalog-name $catalogName `
                                     --catalog-item-name $catalogItemName `
-                                    --parameters "{'environmentName':'$environmentName','location':'$location','principalId':'$principalId','backendServiceName':'$backendServiceName','storageAccountName':'$storageAccountName', 'searchServiceName':'$searchServiceName', 'formRecognizerServiceName':'$formRecognizerServiceName'}" 
+                                    --parameters "{'environmentName':'$environmentName','principalId':'$principalId','backendServiceName':'$backendServiceName','storageAccountName':'$storageAccountName', 'searchServiceName':'$searchServiceName', 'formRecognizerServiceName':'$formRecognizerServiceName'}" 
+
+$result
 
 Write-host "Deploying App service..."
 Set-Location 'app'
