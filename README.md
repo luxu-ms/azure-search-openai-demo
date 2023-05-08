@@ -16,7 +16,7 @@ Ensure that your machine has installed the following items
 - [Dev Center](https://learn.microsoft.com/en-us/azure/deployment-environments/quickstart-create-and-configure-devcenter), [Project](https://learn.microsoft.com/en-us/azure/deployment-environments/quickstart-create-and-configure-projects) and [Catalog](https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-configure-catalog)
    - **Important**: Ensure the user is assigned role "Deployment Environments User" to the project
 - [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli) and [Azure CLI extension for Dev Center](https://learn.microsoft.com/en-us/azure/deployment-environments/how-to-install-devcenter-cli-extension)
-- Clone the [repo](https://github.com/luxu-ms/azure-search-openai-demo)
+- Clone the application and data [repo](https://github.com/luxu-ms/azure-search-openai-demo)
 
 ## How to setup
 Typically, there are two ways to quickly setup your own OpenAI and Cognitive search application.
@@ -27,35 +27,31 @@ Typically, there are two ways to quickly setup your own OpenAI and Cognitive sea
 1. Use "az login" to login
 2. Run the script "deploy.ps1" in the PowerShell by the command below:
 ```
-.\deploy.ps1 <environment name> <project name> <tenant id> <dev center name> <environment type> <catalog name> <catalog item name> <principal id>
+.\deploy.ps1 <environment name> <project name> <dev center name> <environment type> <catalog name> <catalog item name> <principal id>
 ```
 >NOTE: <principal id> is the user id that you use in step 1. If you do not know the user id, you can go to "Azure Active Directory" -> "Users" to search your user and will find the "Object ID"
 
 ### Manually deploy the infra, application and data
 1. Use [Dev Portal](https://devportal.microsoft.com/) to deploy the infra 
-- Click "+New" -> "New environment"
-- Give a name for the environment name (e.g. dev1)
-- Select the environment type (e.g. Dev/Test)
-- Select catalog item (e.g. azure-search-openai-demo)
-- Click "Next"
-- Input the required parameters (e.g. "environmentName" is dev1, "principalId" is your user's Object ID which can be found in the Azure Active Directory's users)
-- Click "Create"
+* Click "+New" -> "New environment"
+* Give a name for the environment name (e.g. dev1)
+* Select the environment type (e.g. Dev/Test)
+* Select catalog item (e.g. azure-search-openai-demo)
+* Click "Next"
+* Input the required parameters (e.g. "environmentName" is dev1, "principalId" is your user's Object ID which can be found in the Azure Active Directory's users)
+* Click "Create"
 
 2. Deploy the application to App service
-- Go to the folder "app" in root folder, run "start.ps1" to build backend and frontend
-- In VS Code, right click "backend" folder and select "Deploy to Web App.."
-- Follow the guide to deploy to your app service which is created in step 1
+* Go to the folder "app" in root folder, run "start.ps1" to build backend and frontend
+* In VS Code, right click "backend" folder and select "Deploy to Web App.." (Note: If no such option, please install "Azure Tools" extension in VS Code)
+* Follow the guide to deploy to your app service which is created in step 1
 
 3. Upload the test data to storage account
-In the step 1, find the created resource: storage acocunt name, search service name and form recognizer servic ename.
+In step 1, find the created resource: storage account name, search service name and form recognizer service name.
 Execute the commands below to upload the test data.
-
 ```
-$storageAccountName='<storage acocunt name>'
+$storageAccountName='<storage account name>'
 $searchServiceName='<search service name>'
-$formRecognizerServiceName='<form recognizer servic ename>'
-$tenantId='<tenatn id>'
-.\scripts\prepdocs.ps1 $storageAccountName $searchServiceName $formRecognizerServiceName $tenantId
+$formRecognizerServiceName='<form recognizer service name>'
+.\scripts\prepdocs.ps1 $storageAccountName $searchServiceName $formRecognizerServiceName
 ```
-
->NOTE: tenant id can be found in Azure Active Directory Overview.
