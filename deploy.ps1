@@ -1,6 +1,6 @@
 if($args.Length -lt 7){
     Write-Host "The required parameters should be provided."
-    Write-Host "deploy.ps1 <environment name> <project name> <dev center name> <environment type> <catalog name> <catalog item name> <principal id>"
+    Write-Host ".\deploy.ps1 <environment name> <project name> <dev center name> <environment type> <catalog name> <catalog item name> <principal id>"
     exit
 }
 
@@ -20,6 +20,8 @@ $backendServiceName = "app-backend-$resourceToken"
 $storageAccountName = "st$resourceToken"
 $searchServiceName = "gptkb-$resourceToken"
 $formRecognizerServiceName = "cog-fr-$resourceToken"
+$appServicePlanName = "plan-$resourceToken"
+$openAiServiceName = "cog-$resourceToken"
 $devcenterName = $args[2]
 $environmentType = $args[3]
 $catalogName = $args[4]
@@ -32,20 +34,18 @@ $result = az devcenter dev environment create --dev-center-name $devcenterName `
                                     --environment-name $environmentName `
                                     --environment-type $environmentType `
                                     --catalog-name $catalogName `
-                                    --catalog-item-name $catalogItemName `
-                                    --parameters "{'environmentName':'$environmentName','principalId':'$principalId','backendServiceName':'$backendServiceName','storageAccountName':'$storageAccountName', 'searchServiceName':'$searchServiceName', 'formRecognizerServiceName':'$formRecognizerServiceName'}" 
+                                    -e $catalogItemName `
+                                    --parameters "{'environmentName':'$environmentName','principalId':'$principalId','backendServiceName':'$backendServiceName','storageAccountName':'$storageAccountName', 'searchServiceName':'$searchServiceName', 'formRecognizerServiceName':'$formRecognizerServiceName', 'appServicePlanName':'$appServicePlanName', 'openAiServiceName':'$openAiServiceName'}" 
 
 Write-host "Deploying App service..."
 Set-Location 'app'
 .\start.ps1
 
-Set-Location '../'
-Compress-Archive -Path backend\* -DestinationPath backend.zip -Force
-Start-Sleep -Seconds 60
-az webapp deploy --resource-group $resourceGroup --name $backendServiceName --src-path backend.zip
+Set-Location '../backend' 
+az webapp up -n $backendServiceName -g $resourceGroup -p $appServicePlanName
 
 Write-Host "Uploading gpt docs..."
-Set-Location "../"
+Set-Location "../../"
 .\scripts\prepdocs.ps1 $storageAccountName $searchServiceName $formRecognizerServiceName
 
 Write-Host "Completed!"
