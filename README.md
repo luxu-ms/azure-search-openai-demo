@@ -23,7 +23,7 @@ Ensure that your machine has installed the following items
 * Click "+New" -> "New environment"
 * Give a name for the environment name (e.g. dev1)
 * Select the environment type (e.g. Dev/Test)
-* Select catalog item (e.g. azure-search-openai-demo)
+* Select catalog item (e.g. OpenAISearch)
 * Click "Next"
 * Input the required parameters (e.g. "environmentName" is dev1, "principalId" is your user's Object ID which can be found in the Azure Active Directory's users)
 * Click "Create"
@@ -33,3 +33,4 @@ Ensure that your machine has installed the following items
 ```
 .\deploy.ps1
 ```
+>Note: The parameters that the deploy.ps1 required are the resources that we use Azure Deployment Environments to provision in step 1.
