@@ -18,10 +18,10 @@ if (Test-Path -Path "/usr") {
 }
 
 Start-Process -FilePath $venvPythonPath -ArgumentList "-m pip install -r requirements.txt" -Wait -NoNewWindow
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "Failed to restore backend python packages"
-    exit $LASTEXITCODE
-}
+# if ($LASTEXITCODE -ne 0) {
+#     Write-Host "Failed to restore backend python packages"
+#     exit $LASTEXITCODE
+# }
 
 Write-Host ""
 Write-Host "Restoring frontend npm packages"
